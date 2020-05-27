@@ -1,0 +1,5 @@
+ALTER TABLE folder
+DROP COLUMN note_id;
+
+ALTER TABLE folder
+ADD COLUMN note_id INTEGER NOT NULL;
