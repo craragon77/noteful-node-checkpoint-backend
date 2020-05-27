@@ -1,19 +1,18 @@
 require('dotenv').config()
 const path = require('path')
 const express = require('express')
-const xss = requrie('xss')
+const xss = require('xss')
 const FoldersService = require('./folders-service')
-
 const FoldersRouter = express.Router()
 const jsonParser = express.json()
 
 const serializeFolder = folder => ({
     id: folder.id,
     note_id: folder.note_id,
-    title: folder.title
+    title: xss(folder.title)
 })
 
-foldersRouter
+FoldersRouter
     .route('/api/folders')
     .get((req, res, next) => {
         const knexInstance = req.app.get('db')

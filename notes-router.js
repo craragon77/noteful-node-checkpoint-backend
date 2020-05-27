@@ -94,7 +94,7 @@ notesRouter
                     message: `Request body must contain either a title or content change`
                 }
             })
-        })
+        
     NotesService.updateNote(
         req.app.get('db'),
         req.params.notes_id,
@@ -104,5 +104,5 @@ notesRouter
             res.status(204).end()
         })
         .catch(next)
-
+    })
 module.exports = NotesService
