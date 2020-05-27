@@ -33,7 +33,7 @@ notesRouter
                 })
             }
         }
-    })
+    
 
     //if (!title || !content){
       //  logger.error(`User must list both a title and content to sucessfully submit`)
@@ -52,8 +52,8 @@ notesRouter
             .json(serializedNotes(note))
         })
         .catch(next)
-
-NotesService
+    })
+notesRouter
     .route('/api/notes/:note-id')
     .all((req, res, next) => {
         NotesService.getById(
