@@ -17,9 +17,12 @@ app.use(cors())
 
 app.get('/', (req,res) => {
     res.send('Hello, Dave')
-})
-app.use(NotesRouter);
-app.use(FoldersRouter);
+});
+
+app.use('/api/notes', NotesRouter)
+app.use('/api/folders', FoldersRouter)
+app.use('/api/notes/:id', NotesRouter)
+app.use('/api/folders:id', FoldersRouter)
 
 app.use(function errorHandler(error, req, res, next) {
     let response

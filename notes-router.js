@@ -88,12 +88,13 @@ notesRouter
         const {title, content} = req.body
         const notetoUpdate = {title, content}
         const numberOfValues = Object.values(notetoUpdate).filter(Boolean).length
-        if(numberOfValues === 0)
+        if(numberOfValues === 0){
             return res.status(400).json({
                 error: {
                     message: `Request body must contain either a title or content change`
                 }
             })
+         }
         
     NotesService.updateNote(
         req.app.get('db'),
