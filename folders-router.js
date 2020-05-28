@@ -42,8 +42,6 @@ FoldersRouter
         newFolder.name = name;
         
         FoldersService.insertFolders(knexInstance, newFolder)
-            console.log(name)
-            console.log(newFolder)
             .then(folder => {
                 res.status(201)
                     .location(path.posix.join(req.originalUrl, `${folder.id}`))
