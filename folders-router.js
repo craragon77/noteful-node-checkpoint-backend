@@ -5,11 +5,12 @@ const xss = require('xss')
 const FoldersService = require('./folders-service')
 const FoldersRouter = express.Router()
 const jsonParser = express.json()
+const bodyParser = express.json()
 
 const serializeFolder = folder => ({
     id: folder.id,
     note_id: folder.note_id,
-    title: xss(folder.title)
+    name: xss(folder.title)
 })
 
 FoldersRouter
@@ -22,10 +23,14 @@ FoldersRouter
             })
             .catch(next)
     })
-    .post(jsonParser, (req, res, next) => {
-        const {title} = req.body
+    .post(bodyParser, (req, res, next) => {
+        const {name} = req.body
         const knexInstance = req.app.get('db')
-        const newFolder = {title}
+        const newFolder = {name}
+        console.log(req.body.name)
+        console.log(req.body)
+        console.log(name)
+        console.log(newFolder)
         for(const field of Object.entries(newFolder)) {
             if(![field]){
                 //logger.error(`${field} is required`)
@@ -34,9 +39,11 @@ FoldersRouter
                 })
             }
         }
-        newFolder.title = title;
+        newFolder.name = name;
         
         FoldersService.insertFolders(knexInstance, newFolder)
+            console.log(name)
+            console.log(newFolder)
             .then(folder => {
                 res.status(201)
                     .location(path.posix.join(req.originalUrl, `${folder.id}`))
