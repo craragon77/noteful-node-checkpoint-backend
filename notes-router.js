@@ -27,7 +27,7 @@ NotesRouter
         const newNote = {title, content}
 
         for(const[key, value] of Object.entries(newNote)){
-            if(value = null){
+            if(![value]){
                 return res.status(404).json({
                     error: {message: `missing ${key} in request body`}
                 })
