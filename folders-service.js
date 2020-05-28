@@ -1,5 +1,3 @@
-const knexService = require('knex')
-
 const FoldersService = {
     getAllFolders(knex){
         return knex.select('*').from('folders')
@@ -31,3 +29,5 @@ const FoldersService = {
             .update(newUserField)
     }
 }
+
+module.exports = FoldersService
