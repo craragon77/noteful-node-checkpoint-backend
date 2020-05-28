@@ -5,7 +5,7 @@ const knex = require('knex');
 
 const db = knex({
     client: 'pg',
-    conection: DATABASE_URL,
+    connection: DATABASE_URL,
 })
 
 app.set('db', db)
