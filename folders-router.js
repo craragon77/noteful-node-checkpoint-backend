@@ -23,22 +23,20 @@ FoldersRouter
             .catch(next)
     })
     .post(jsonParser, (req, res, next) => {
-        const {id, note_id, title} = req.body
-        const newFolder = {id, title}
-
-        for(const [key, value] of Object.entries(newFolder)) {
-            if(value == null){
+        const {title} = req.body
+        const knexInstance = req.app.get('db')
+        const newFolder = {title}
+        for(const field of Object.entries(newFolder)) {
+            if(![field]){
+                //logger.error(`${field} is required`)
                 return res.status(400).json({
-                    error: {message: `Missing ${key} in request body`}
+                    error: {message: `Missing ${field} in request body`}
                 })
             }
         }
         newFolder.title = title;
         
-        FoldersService.insertFolder(
-            req.app.get('db'),
-            newFolder
-        )
+        FoldersService.insertFolders(knexInstance, newFolder)
             .then(folder => {
                 res.status(201)
                     .location(path.posix.join(req.originalUrl, `${folder.id}`))
@@ -52,7 +50,7 @@ FoldersRouter
     .all((req, res, next) => {
         FoldersService.getById(
             req.app.get('db'),
-            req.params.user_id
+            req.params.id
         )
         .then(folder => {
             if(!folder){
