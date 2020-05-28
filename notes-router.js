@@ -54,11 +54,11 @@ NotesRouter
         .catch(next)
     })
 NotesRouter
-    .route('/api/notes/:note-id')
+    .route(`/api/notes/:id`)
     .all((req, res, next) => {
         NotesService.getById(
             req.app.get('db'),
-            req.params.notes_id
+            req.params.id
         )
         .then(note => {
             if (!note){
