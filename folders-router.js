@@ -16,7 +16,7 @@ FoldersRouter
     .route('/api/folders')
     .get((req, res, next) => {
         const knexInstance = req.app.get('db')
-        FoldersService = knexInstance
+        FoldersService.getAllFolders(knexInstance)
             .then(folder => {
                 res.json(folder.map(serializeFolder))
             })
