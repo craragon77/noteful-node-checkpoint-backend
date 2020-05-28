@@ -7,9 +7,8 @@ const {NODE_ENV} = require('./config')
 const NotesRouter = require('../notes-router');
 const FoldersRouter = require('../folders-router');
 const app = express()
-
 const morganOption = (NODE_ENV === 'production')
-  ? 'tiny'
+  ? 'dev'
   : 'common';
 app.use(morgan(morganOption))
 app.use(helmet())
@@ -19,10 +18,8 @@ app.get('/', (req,res) => {
     res.send('Hello, Dave')
 });
 
-app.use('/api/notes', NotesRouter)
-app.use('/api/folders', FoldersRouter)
-app.use('/api/notes/:id', NotesRouter)
-app.use('/api/folders:id', FoldersRouter)
+app.use(NotesRouter)
+app.use(FoldersRouter)
 
 app.use(function errorHandler(error, req, res, next) {
     let response

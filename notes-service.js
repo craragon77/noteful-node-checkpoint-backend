@@ -1,7 +1,6 @@
-const knex = require('knex')
 const NotesService = {
     getAllNotes(knex){
-        return knex.select('*').from('notes')
+        knex.select('*').from('notes')
     },
     insertNote(knex, newUser){
         return knex

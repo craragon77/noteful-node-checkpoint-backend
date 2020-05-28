@@ -1,7 +1,7 @@
 const knex = require('knex');
 const NotesService = require('../notes-service')
-const {makeNotesArray} = require('./notes.fixtures')
-const app = require('../src/App/App')
+const {makeNotesArray, makeSketchyNotes} = require('./notes.fixtures')
+const app = require('../src/app')
 
 describe('Notes Endpoints', () => {
     let db
@@ -13,14 +13,13 @@ describe('Notes Endpoints', () => {
         })
         app.set('db', db)
     })
-})
 
 after('disconnect from db', () => db.destroy())
 before('cleanup', () => db('Noteful-DB').truncate())
 afterEach('cleanup', () => db('Noteful-DB').truncate())
 
 describe(`Unauthorized requests`, () => {
-    const testNote = fixtures.makeNotesArray()
+    const testNote = makeNotesArray()
 
     beforeEach('insert notes', () => {
         return db
@@ -68,7 +67,7 @@ describe('GET /api/notes', () => {
         })
     })
     context('Given there are notes in the database', () => {
-        const testNotes = fixtures.makeNotesArray()
+        const testNotes = makeNotesArray()
 
         beforeEach('insert notes', () => {
             return db
@@ -83,7 +82,7 @@ describe('GET /api/notes', () => {
         })
     })
     context(`Given an XSS attack note`, () => {
-        const {maliciousNote, expectedNote} = fixtures.makeSketchyNotes()
+        const {maliciousNote, expectedNote} = makeSketchyNotes()
 
         beforeEach('insert malicious bookmark', () => {
             return db
@@ -115,7 +114,7 @@ describe('GET /api/notes/:id', () => {
         })
     })
     context('Given there are bookmarks in the database', () => {
-        const testNotes = fixtures.makeNotesArray()
+        const testNotes = makeNotesArray()
 
         beforeEach('insert bookmarks', () => {
             return db
@@ -134,7 +133,7 @@ describe('GET /api/notes/:id', () => {
     })
 
     context(`Given an XSS attack note`, () => {
-        const {maliciousNote, expectedNote} = fixtures.makeSketchyNotes()
+        const {maliciousNote, expectedNote} = makeSketchyNotes()
 
         beforeEach('insert sketchy note', () => {
             return db
@@ -167,9 +166,9 @@ describe('DELETE /api/notes/:id', () => {
     })
 
     context('Given there are notes in the database', () => {
-        const testNotes = fixtures.makeNotesArray()
+        const testNotes = makeNotesArray()
 
-        beforeEeach('insert notes', () => {
+        beforeEach('insert notes', () => {
             return db
                 .into('Noteful-DB')
                 .insert(testNotes)
@@ -222,7 +221,7 @@ describe('POST /api/notes', () => {
             .expect(201)
             .expect(res => {
                 expect(res.body.title).to.eql(newNote.title)
-                expect(res.body.content).to.eql(new.content)
+                expect(res.body.content).to.eql(newNote.content)
                 expect(res.body).to.have.property('id')
             })
             .then(res => {
@@ -233,7 +232,7 @@ describe('POST /api/notes', () => {
             })
     })
     it('removes XSS attack content from response', () => {
-        const {maliciousNote, expectedNote} = fixtures.makeSketchyNotes()
+        const {maliciousNote, expectedNote} = makeSketchyNotes()
         return supertest(app)
             .post(`/api/notes`)
             .send(maliciousNote)
@@ -258,7 +257,7 @@ describe(`PATCH /api/notes/note_id`, () => {
         
     })
     context('Given there are notes in the database', () => {
-        const testNotes = fixture.makeSketchyNotes()
+        const testNotes = makeSketchyNotes()
 
         beforeEach('insert notes', () => {
             return db
@@ -323,4 +322,5 @@ describe(`PATCH /api/notes/note_id`, () => {
                 })
         })
     })
+})
 })

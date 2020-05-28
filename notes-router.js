@@ -2,7 +2,7 @@ require('dotenv').config()
 const path = require('path')
 const express = require('express')
 const NotesService = require('./notes-service')
-const notesRouter = express.Router()
+const NotesRouter = express.Router()
 const jsonParser = express.json()
 const xss = require('xss')
 
@@ -12,7 +12,7 @@ const serializedNotes = note => ({
     content: xss(note.content),
     date_published: note.date_published
 })
-notesRouter
+NotesRouter
     .route('/api/notes')
     .get((req,res, next) => {
         const knexInstance = req.app.get('db')
@@ -53,7 +53,7 @@ notesRouter
         })
         .catch(next)
     })
-notesRouter
+NotesRouter
     .route('/api/notes/:note-id')
     .all((req, res, next) => {
         NotesService.getById(
@@ -106,4 +106,4 @@ notesRouter
         })
         .catch(next)
     })
-module.exports = NotesService
+module.exports = NotesRouter
