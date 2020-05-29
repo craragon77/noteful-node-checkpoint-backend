@@ -51,53 +51,54 @@ FoldersRouter
     })
 
 FoldersRouter
-    .route('/api/folder/:id')
-    .all((req, res, next) => {
-        FoldersService.getById(
-            req.app.get('db'),
-            req.params.id
-        )
+    .route('/api/folders/:id')
+    .all(jsonParser, (req, res, next) => {
+        const knexInstance = req.app.get('db')
+        const {id} = req.body
+        const folder_id = {id}
+        FoldersService.getById(knexInstance, folder_id)
         .then(folder => {
             if(!folder){
                 return res.status(404).json({
                     error: {message: `This specific folder cannot be found`}
                 })
             }
-            res.user = user
+            res.folder = folder
             next()
-        })
-        .get((req, res, next) => {
-            res.json(serializeFolder(res.folder))
-        })
-        .delete((req, res, next) => {
-            FoldersService.deleteFolder(
-                req.app.get(db),
-                req.params.id
-            )
-            .then(numRowsAffected => {
-                res.status(204).end
             })
             .catch(next)
         })
-        .patch(jsonParser, (req, res, next) => {
-            const {id, note_id, title} = req.body
-            const folderToUpdate = {title}
-
-            const numberOfValues = Object.value(folderToUpdate).filter(Boolean).length
-            if (numberOfValues === 0)
-                return res.status(400).json({
-                    error: {message: `Request body must contain either a title`}
-                })
+        .get(jsonParser, (req, res, next) => {
+            res.json(serializeFolder(res.folder))
+        })
+        .delete(jsonParser, (req, res, next) => {
+            const knexInstance = req.app.get('db')
+            const {id} = req.body
+            const folder_id = {id}
+            FoldersService.deleteFolder(knexInstance, folder_id)
+            .then(() => {
+                res.status(204).end()
             })
-            FoldersService.updateFolder(
-                req.app.get('db'),
-                req.params.id,
-                folderToUpdate
-            )
-                .then(numRowsAffected => {
-                    res.status(204).end()
+            .catch(next)
+        })
+        .patch(bodyParser, (req, res, next) => {
+            const knexInstance = req.app.get('db')
+            const {id, name} = req.body
+            const folderToUpdate = {name}
+            const folder_id = {id}
+            const numberOfValues = Object.values(folderToUpdate).filter(Boolean).length
+            if(numberOfValues === 0){
+                return res.status(400).json({
+                    error: {
+                        message: `Request body must contain a name`
+                    }
                 })
-                .catch(next)
-    })
+            }
+        FoldersService.updateFolder(knexInstance, folder_id, folderToUpdate)
+            .then(() => {
+                res.status(204).end()
+            })
+            .catch(next)
+        })
 
 module.exports = FoldersRouter

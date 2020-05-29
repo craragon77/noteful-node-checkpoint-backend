@@ -101,7 +101,7 @@ NotesRouter
             })
          }
         
-    NotesService.updateNote(knexInstance, note_id,notetoUpdate)
+    NotesService.updateNote(knexInstance, note_id, notetoUpdate)
         .then(() => {
             res.status(204).end()
         })
