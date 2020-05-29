@@ -56,10 +56,11 @@ NotesRouter
 NotesRouter
     .route(`/api/notes/:id`)
     .all((req, res, next) => {
-        NotesService.getById(
-            req.app.get('db'),
-            req.param.id
-        )
+        const knexInstance = req.app.get('db')
+        console.log(req.body)
+        const {id} = req.body
+        const note_id = {id}
+        NotesService.getById(knexInstance, note_id)
         .then(note => {
             if (!note){
                 return res.status(404).json({
@@ -72,19 +73,14 @@ NotesRouter
         .catch(next)
     })
     .get((req, res, next) => {
-        res.json(serializedNotes(res.user))
+        res.json(serializedNotes(res.id))
     })
     .delete(jsonParser,(req, res, next) => {
-        const {id} = req.params
-        const note_id = {id}
         //console.log(req.body)
         //console.log(req.params)
         //console.log(req.body.id)
         //res.json(note_id)
-        NotesService.deleteUser(
-            req.app.get('db'),
-            req.params.id
-        )
+        NotesService.deleteUser(knexInstance('db'),note_id)
         .then(() => {
             res.status(204).end()
         })
