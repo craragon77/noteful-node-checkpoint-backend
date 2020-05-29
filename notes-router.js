@@ -55,7 +55,7 @@ NotesRouter
     })
 NotesRouter
     .route(`/api/notes/:id`)
-    .all((req, res, next) => {
+    .all(jsonParser, (req, res, next) => {
         const knexInstance = req.app.get('db')
         console.log(req.body)
         const {id} = req.body
@@ -76,11 +76,11 @@ NotesRouter
         res.json(serializedNotes(res.id))
     })
     .delete(jsonParser,(req, res, next) => {
-        //console.log(req.body)
-        //console.log(req.params)
-        //console.log(req.body.id)
-        //res.json(note_id)
-        NotesService.deleteUser(knexInstance('db'),note_id)
+        const knexInstance = req.app.get('db')
+        console.log(req.body)
+        const {id} = req.body
+        const note_id = {id}
+        NotesService.deleteNote(knexInstance,note_id)
         .then(() => {
             res.status(204).end()
         })
