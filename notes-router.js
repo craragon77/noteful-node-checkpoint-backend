@@ -4,6 +4,7 @@ const express = require('express')
 const NotesService = require('./notes-service')
 const NotesRouter = express.Router()
 const jsonParser = express.json()
+const bodyParser = express.json()
 const xss = require('xss')
 
 const serializedNotes = note => ({
@@ -73,7 +74,7 @@ NotesRouter
         .catch(next)
     })
     .get((req, res, next) => {
-        res.json(serializedNotes(res.id))
+        res.json(serializedNotes(res.note))
     })
     .delete(jsonParser,(req, res, next) => {
         const knexInstance = req.app.get('db')
@@ -86,9 +87,11 @@ NotesRouter
         })
         .catch(next)
     })
-    .patch(jsonParser, (req, res, next) => {
-        const {title, content} = req.body
+    .patch(bodyParser, (req, res, next) => {
+        const knexInstance = req.app.get('db')
+        const {id, title, content} = req.body
         const notetoUpdate = {title, content}
+        const note_id = {id}
         const numberOfValues = Object.values(notetoUpdate).filter(Boolean).length
         if(numberOfValues === 0){
             return res.status(400).json({
@@ -98,12 +101,8 @@ NotesRouter
             })
          }
         
-    NotesService.updateNote(
-        req.app.get('db'),
-        req.params.notes_id,
-        notetoUpdate
-    )
-        .then(numRowsAffected => {
+    NotesService.updateNote(knexInstance, note_id,notetoUpdate)
+        .then(() => {
             res.status(204).end()
         })
         .catch(next)
