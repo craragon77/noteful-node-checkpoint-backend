@@ -1,0 +1,5 @@
+ALTER TABLE folders
+DROP COLUMN note_id;
+
+ALTER TABLE folders
+ADD COLUMN note_id INTEGER REFERENCES notes(id);

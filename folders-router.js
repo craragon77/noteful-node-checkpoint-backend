@@ -6,6 +6,7 @@ const FoldersService = require('./folders-service')
 const FoldersRouter = express.Router()
 const jsonParser = express.json()
 const bodyParser = express.json()
+const cors = require('cors')
 
 const serializeFolder = folder => ({
     id: folder.id,
