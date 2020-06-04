@@ -1,0 +1,2 @@
+ALTER TABLE note
+DROP COLUMN date
