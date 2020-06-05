@@ -10,7 +10,6 @@ const cors = require('cors')
 
 const serializeFolder = folder => ({
     id: folder.id,
-    note_id: folder.note_id,
     name: xss(folder.name)
 })
 

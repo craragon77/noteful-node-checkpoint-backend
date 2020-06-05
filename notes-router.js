@@ -11,7 +11,8 @@ const serializedNotes = note => ({
     id: note.id,
     title: xss(note.title),
     content: xss(note.content),
-    date_published: note.date_published
+    folder_id: note.folder_id,
+    date: note.date
 })
 NotesRouter
     .route('/api/notes')
@@ -24,8 +25,8 @@ NotesRouter
             .catch(next)
     })
     .post(jsonParser, (req,res,next) => {
-        const {title, content} = req.body
-        const newNote = {title, content}
+        const {title, content, folder_id} = req.body
+        const newNote = {title, content, folder_id}
 
         for(const[key, value] of Object.entries(newNote)){
             if(![value]){
@@ -89,8 +90,8 @@ NotesRouter
     })
     .patch(bodyParser, (req, res, next) => {
         const knexInstance = req.app.get('db')
-        const {id, title, content} = req.body
-        const notetoUpdate = {title, content}
+        const {id, title, content, folder_id} = req.body
+        const notetoUpdate = {title, content, folder_id}
         const note_id = {id}
         const numberOfValues = Object.values(notetoUpdate).filter(Boolean).length
         if(numberOfValues === 0){
