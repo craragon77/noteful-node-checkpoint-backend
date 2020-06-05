@@ -79,8 +79,8 @@ NotesRouter
     })
     .delete(jsonParser,(req, res, next) => {
         const knexInstance = req.app.get('db')
-        console.log(req.body)
-        const {id} = req.body
+        console.log(req.param)
+        const {id} = req.params
         const note_id = {id}
         NotesService.deleteNote(knexInstance,note_id)
         .then(() => {
