@@ -15,17 +15,17 @@ const NotesService = {
         return knex
             .select()
             .table('notes')
-            .where(id, 'id')
+            .where('id', id)
             .first()
     },
     deleteNote(knex, id){
         return knex('notes')
-            .where(id, 'id')
+            .where('id', id)
             .delete()
     },
     updateNote(knex, id, newUserFields){
         return knex('notes')
-            .where(id, 'id')
+            .where('id', id)
             .update(newUserFields)
     }
 }    

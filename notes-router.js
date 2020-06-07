@@ -60,9 +60,9 @@ NotesRouter
     .all(jsonParser, (req, res, next) => {
         const knexInstance = req.app.get('db')
         console.log(req.body)
-        const {id} = req.body
-        const note_id = {id}
-        NotesService.getById(knexInstance, note_id)
+        const {id} = req.params;
+        //const note_id = {id}
+        NotesService.getById(knexInstance, id)
         .then(note => {
             if (!note){
                 return res.status(404).json({
@@ -81,8 +81,8 @@ NotesRouter
         const knexInstance = req.app.get('db')
         console.log(req.param)
         const {id} = req.params
-        const note_id = {id}
-        NotesService.deleteNote(knexInstance,note_id)
+        //const note_id = {id}
+        NotesService.deleteNote(knexInstance,id)
         .then(() => {
             res.status(204).end()
         })
